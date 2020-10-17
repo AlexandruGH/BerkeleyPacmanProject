@@ -121,22 +121,71 @@ def depthFirstSearch(problem):
     #    (state, action, cost) = succ
     #    print "Next state could be ", state, " with action ", action, " and cost ", cost
 
+    open=util.Stack()
+    currentPath=util.Stack()
 
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-    #from game import Directions
-    #w=Directions.WEST
-    #return [w, w, w, w]
+    closed=[]
+    finalPath=[]
+
+    open.push(problem.getStartState())
+
+    currentState=open.pop()
+
+    while not problem.isGoalState(currentState):
+        if currentState not in closed:
+            closed.append(currentState)
+            for successor in problem.getSuccessors(currentState):
+                open.push(successor[0])
+                currentPath.push(finalPath+[successor[1]])
+        currentState=open.pop()
+        finalPath=currentPath.pop()
+    return finalPath
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    open=util.Queue()
+    currentPath=util.Queue()
+
+    closed=[]
+    finalPath=[]
+
+    open.push(problem.getStartState())
+    currentState=open.pop()
+    while not problem.isGoalState(currentState):
+        if currentState not in closed:
+            closed.append(currentState)
+            for successor in problem.getSuccessors(currentState):
+                open.push(successor[0]) #enqueue
+                currentPath.push(finalPath+[successor[1]]) #enqueue
+        currentState=open.pop() #dequeue
+        finalPath=currentPath.pop() #dequeue
+    return finalPath
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    open=util.PriorityQueue()
+    currentPath=util.PriorityQueue()
+    closed=[]
+    finalPath=[]
+
+    open.push(problem.getStartState(), 0)
+    currentState=open.pop()
+
+    while not problem.isGoalState(currentState):
+        if currentState not in closed:
+            closed.append(currentState)
+
+            for successor in problem.getSuccessors(currentState):
+                pathCost=problem.getCostOfActions(finalPath+[successor[1]])
+                if successor[0] not in closed:
+                    open.push(successor[0], pathCost)
+                    currentPath.push(finalPath+[successor[1]], pathCost)
+        currentState=open.pop()
+        finalPath=currentPath.pop()
+
+    return finalPath
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -148,7 +197,34 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    open = util.PriorityQueue()
+    currentPath = util.PriorityQueue()
+    closed = []
+    finalPath = []
+
+    open.push(problem.getStartState(), 0)
+    currentState = open.pop()
+
+    while not problem.isGoalState(currentState):
+        if currentState not in closed:
+            closed.append(currentState)
+
+            for successor in problem.getSuccessors(currentState):
+                pathCost = problem.getCostOfActions(finalPath + [successor[1]])
+                pathCost+=heuristic(successor[0], problem)
+                if successor[0] not in closed:
+                    open.push(successor[0], pathCost)
+                    currentPath.push(finalPath + [successor[1]], pathCost)
+        currentState = open.pop()
+        finalPath = currentPath.pop()
+
+    return finalPath
+
+
+
+
+
+
 
 
 # Abbreviations

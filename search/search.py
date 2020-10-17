@@ -16,8 +16,22 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
+import random
 
 import util
+
+
+class CustomNode:
+
+    def __init__(self, name, cost):
+        self.name=name
+        self.cost=cost
+
+    def get_name(self):
+        return self.name
+
+    def get_cost(self):
+        return self.cost
 
 class SearchProblem:
     """
@@ -72,6 +86,22 @@ def tinyMazeSearch(problem):
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
 
+def randomSearch(problem):
+    current = problem.getStartState()
+    solution = []
+
+    while (not (problem.isGoalState(current))):
+        succ=problem.getSuccessors(current)
+        no_of_successors=len(succ)
+        random_succ_index=int(random.random()*no_of_successors)
+        next=succ[random_succ_index]
+        current=next[0]
+        solution.append(next[1])
+    print "The solution is ", solution
+    return solution
+
+
+
 def depthFirstSearch(problem):
     """
     Search the deepest nodes in the search tree first.
@@ -86,13 +116,17 @@ def depthFirstSearch(problem):
     #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     #print "Start's successors:", problem.getSuccessors(problem.getStartState())
 
-    print "Initial state is", problem.getStartState()
-    for succ in problem.getSuccessors(problem.getStartState()):
-        (state, action, cost) = succ
-        print "Next state could be ", state, " with action ", action, " and cost ", cost
+    #print "Initial state is", problem.getStartState()
+    #for succ in problem.getSuccessors(problem.getStartState()):
+    #    (state, action, cost) = succ
+    #    print "Next state could be ", state, " with action ", action, " and cost ", cost
+
 
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+    #from game import Directions
+    #w=Directions.WEST
+    #return [w, w, w, w]
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -122,3 +156,4 @@ bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
+rs = randomSearch
